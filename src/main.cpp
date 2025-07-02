@@ -1,4 +1,5 @@
 #include "../include/commands.h"
+#include "../test/basic_test.h"
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -64,6 +65,9 @@ int main(int argc, char *argv[]) {
   default:
     return 1;
   }
+
+  // Test cases for functiosn
+  testBasicFunctions();
 
   return 0;
 }
