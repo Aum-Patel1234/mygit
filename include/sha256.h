@@ -4,23 +4,12 @@
 #include <array>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 inline std::uint32_t rightRotate(std::uint32_t val, unsigned int bits) {
   // std::uint32_t mask = (1ULL << 32) - 1;
-  uint32_t mask = 0xFFFFFFFF; // equivalent to above but safer
-  return ((val << bits) | (val >> (32 - bits))) & mask;
+  return ((val << bits) | (val >> (32 - bits)));
 }
-
-// Initial hash values (first 32 bits of the fractional parts of the square
-// roots of the first 8 primes)
-constexpr std::uint32_t h0 = 0x6a09e667;
-constexpr std::uint32_t h1 = 0xbb67ae85;
-constexpr std::uint32_t h2 = 0x3c6ef372;
-constexpr std::uint32_t h3 = 0xa54ff53a;
-constexpr std::uint32_t h4 = 0x510e527f;
-constexpr std::uint32_t h5 = 0x9b05688c;
-constexpr std::uint32_t h6 = 0x1f83d9ab;
-constexpr std::uint32_t h7 = 0x5be0cd19;
 
 // Constants (first 32 bits of the fractional parts of the cube roots of the
 // first 64 primes 2..311)
@@ -37,8 +26,9 @@ constexpr std::array<std::uint32_t, 64> k = {
     0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
-std::string hash(const std::string &input);
-std::array<std::uint8_t, 32> hash_bytes(const std::string &input);
-void reset();
+std::vector<uint8_t> padMessage(const std::string &input);
 
+std::string sha256(const std::string &input);
+
+std::string sha256Lib(const std::string &input);
 #endif // SHA256_H
