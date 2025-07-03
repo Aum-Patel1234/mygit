@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <cstring>
 #include <iomanip>
+#include <iostream>
 #include <openssl/sha.h>
 #include <sstream>
 #include <vector>
@@ -99,12 +100,20 @@ std::string sha256(const std::string &input) {
 // maybe because the length in the library is 32 bit and i have taken code of 64
 // bit
 std::string sha256Lib(const std::string &inputStr) {
+  // this is the buffer where the data will be filled after coming from the
+  // SHA256 function
   unsigned char hash[SHA256_DIGEST_LENGTH];
   const unsigned char *data = (const unsigned char *)inputStr.c_str();
+
   SHA256(data, inputStr.size(), hash);
   std::stringstream ss;
   for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
     ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+    // std::cout << ss.str() << std::endl;
   }
+  // std::hex tells the stream to print in hex.
+  // std::setw(2) ensures 2 characters per byte (e.g., 0a, not a)
+  // std::setfill('0') pads with 0 if needed.
+  // (int)hash[i]: converts byte to integer for correct formatting.
   return ss.str();
 }

@@ -1,4 +1,5 @@
 #include "../include/commands.h"
+#include "../include/init.h"
 #include "../test/basic_test.h"
 #include <iostream>
 
@@ -14,6 +15,7 @@ int main(int argc, char *argv[]) {
 
   switch (command) {
   case Command::init:
+    gitInit();
     std::cout << "Initializing an empty .mygit directory\n";
     break;
 
