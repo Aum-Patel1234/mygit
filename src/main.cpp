@@ -1,5 +1,6 @@
 #include "../include/commands.h"
 #include "../include/init.h"
+#include "../include/status.hpp"
 #include "../test/basic_test.h"
 #include <iostream>
 
@@ -29,6 +30,7 @@ int main(int argc, char *argv[]) {
 
   case Command::status:
     std::cout << "Showing status of working directory and staging area\n";
+    gitStatus();
     break;
 
   case Command::log:
