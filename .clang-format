@@ -1,0 +1,43 @@
+BasedOnStyle: Google
+ColumnLimit: 120
+
+# indentation / spacing
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+
+# function and parameter formatting
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackParameters: false
+BinPackArguments: false
+AlignAfterOpenBracket: Align
+BreakBeforeBraces: Attach
+
+# namespaces, includes, etc.
+NamespaceIndentation: All
+IndentCaseLabels: true
+SortIncludes: true
+IncludeBlocks: Merge
+IncludeCategories:
+  - Regex: '^<.*\.h>'
+    Priority: 1
+  - Regex: '^<.*>'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+
+# line breaks and wrapping
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# pointer alignment (Git-like)
+PointerAlignment: Left
+
+# comments
+ReflowComments: true
+
+# C++17 onwards
+Standard: Latest
+

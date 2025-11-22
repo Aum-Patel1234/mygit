@@ -3,6 +3,14 @@
 `mygit` is a minimal Git-like version control system written in C++.  
 It aims to teach and demonstrate how Git works under the hood by re-implementing key features from scratch.
 
+
+---
+
+## ⭐ Credits  
+This project draws major inspiration from the excellent explanation :  
+➡️ **https://wyag.thb.lt/#intro**
+
+
 ---
 
 ## 🚀 Features
