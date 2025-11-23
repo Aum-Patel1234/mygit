@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../include/commands.h"
+#include "../include/config_parser.hpp"
 #include "../include/init.h"
 #include "../include/status.hpp"
 #include "../test/basic_test.h"
@@ -14,9 +15,17 @@ int main(int argc, char* argv[]) {
     Command command = getCommandMap(cmd);
 
     switch (command) {
-        case Command::init:
+        case Command::init: {
             gitInit();
+            ConfigParser cf;
+            auto map = cf.read(CONFIG_FILE, "core");
+            std::cout << "\n\nconfig file\n\n";
+            for (auto& [k, v] : map) {
+                std::cout << k << "=" << v << "\n";
+            }
+            std::cout << "\n\n";
             break;
+        }
 
         case Command::add:
             std::cout << "Adding files to staging area.\n";

@@ -2,6 +2,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include "../include/repo.h"
+
 namespace fs = std::filesystem;
 
 void gitInit() {
@@ -26,4 +28,11 @@ void gitInit() {
     // create empty files
     std::ofstream config(CONFIG_FILE);
     std::ofstream description(DESCRIPTION_FILE);
+
+    if (!description) {
+        throw std::runtime_error("Failed to create description file");
+    }
+
+    description << "Unnamed repository; edit this file 'description' to name the repository.\n";
+    repoDefaultConfig();
 }
