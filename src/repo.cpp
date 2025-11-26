@@ -1,6 +1,8 @@
 #include "../include/repo.h"
 #include <filesystem>
 #include <optional>
+#include <stdexcept>
+#include <string>
 #include "../include/config_parser.hpp"
 
 namespace fs = std::filesystem;
@@ -41,4 +43,21 @@ void repoDefaultConfig() {
     cf[core].set("bare", "false");
 
     cf.write(CONFIG_FILE);
+}
+
+std::optional<fs::path> repoFind(const std::string& pathString, bool required) {
+    // not use canonical cause it requires the path to be really present or throws bug
+    fs::path path = fs::weakly_canonical(pathString);  // turns string into path
+
+    if (fs::is_directory(path) && fs::is_directory(path / GIT_DIR))
+        return path;
+
+    fs::path parent = path.parent_path();
+
+    if (parent == path) {
+        if (required)
+            throw std::runtime_error("No git directory.\n");
+        return std::nullopt;
+    }
+    return repoFind(parent, required);
 }

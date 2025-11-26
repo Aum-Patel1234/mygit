@@ -43,4 +43,25 @@ std::optional<std::filesystem::path> repoFile(const std::filesystem::path& cwd,
  */
 void repoDefaultConfig();
 
+/*
+ * Finds the root directory where the mygit project is initialized.
+ *
+ * This function searches upward from the given path until it finds the
+ * repository root (for example, a directory containing a `.mygit` folder).
+ *
+ * Parameters:
+ *   path     - The starting directory for the search. Defaults to the
+ *              current working directory ".".
+ *   required - If true (default), the function throws an exception when
+ *              no repository root is found. If false, it simply returns
+ *              an empty path.
+ *
+ * Example:
+ *   Sometimes that root is the current directory, but it may also be a parent: your repository’s root may be in
+ * ~/Documents/MyProject, but you may currently be working in ~/Documents/MyProject/src/tui/frames/mainview/. The
+ * repoFind() function we’ll now create will look for that root, starting at the current directory and recursing back
+ * to /. To identify a path as a repository, it will check for the presence of a .mygit directory.
+ */
+std::optional<std::filesystem::path> repoFind(const std::string& path = ".", bool required = true);
+
 #endif  // !GITINIT

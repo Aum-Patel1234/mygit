@@ -11,6 +11,29 @@
     file.seekg(0, file.end);    // Move pointer to end of file
     int length = file.tellg();  // Get file size in bytes
     file.seekg(0, file.beg);    // Reset pointer to start for reading data
+    ```
+    
+
+## 2. IMPORTANT: weakly_canonical(path)
+
+**fs::weakly_canonical(path)** returns an absolute, normalized version of a path,
+but **does NOT require the full path to exist**. This avoids exceptions and
+makes it ideal for directory walking (e.g., searching for a `.git` folder).
+
+### What it does:
+1. Converts the given path into an **absolute path**
+2. Removes `.` and `..` components (normalization)
+3. Resolves symlinks **only** for existing directories
+4. Leaves non-existing parts untouched (no throw)
+
+### Example:
+Input : `"src/../build/output"`  
+Output: `"/home/user/project/build/output"`  
+*(Even if `/build/output` does NOT exist)*
+
+### Why it's useful:
+Perfect for recursive upward searches where some directories might not exist,
+such as locating a `.git` directory by moving toward the root.
 
 --- 
 

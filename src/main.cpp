@@ -3,7 +3,7 @@
 #include "../include/config_parser.hpp"
 #include "../include/init.h"
 #include "../include/status.hpp"
-#include "../test/basic_test.h"
+#include "../test/test.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
