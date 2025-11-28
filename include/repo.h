@@ -27,7 +27,7 @@ std::optional<std::filesystem::path> repoDir(const std::filesystem::path& cwd,
 
 std::optional<std::filesystem::path> repoFile(const std::filesystem::path& cwd,
                                               const std::filesystem::path& filePath,
-                                              bool mkdir = false);
+                                              bool mkfile = false);
 
 /*
  * Write the default config file

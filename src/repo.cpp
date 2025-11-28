@@ -1,5 +1,6 @@
 #include "../include/repo.h"
 #include <filesystem>
+#include <fstream>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -29,10 +30,21 @@ std::optional<fs::path> repoDir(const fs::path& cwd, const fs::path& path, bool 
     return std::nullopt;
 }
 
-std::optional<fs::path> repoFile(const fs::path& cwd, const fs::path& filePath, bool mkdir) {
-    if (repoDir(cwd, filePath.parent_path(), mkdir))
-        return repoPath(cwd, filePath);
-    return std::nullopt;
+std::optional<fs::path> repoFile(const fs::path& cwd, const fs::path& filePath, bool mkfile) {
+    auto parent = repoDir(cwd, filePath.parent_path(), mkfile);
+
+    if (!parent)
+        return std::nullopt;
+
+    fs::path fullPath = cwd / filePath;
+
+    if (!mkfile && !fs::exists(fullPath)) {
+        return std::nullopt;
+    } else if (!fs::exists(fullPath)) {
+        std::ofstream out(fullPath);  // create an empty file
+    }
+
+    return fullPath;
 }
 
 void repoDefaultConfig() {

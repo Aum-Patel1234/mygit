@@ -1,6 +1,13 @@
 #ifndef UTILS
 #define UTILS
 
+#include <zconf.h>
+#include <zlib.h>
+#include <cstddef>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 constexpr const char* GIT_DIR = ".mygit";
 constexpr const char* HEAD_FILE = ".mygit/HEAD";
 constexpr const char* CONFIG_FILE = ".mygit/config";
@@ -15,5 +22,8 @@ constexpr const char* REFS_HEADS_DIR = ".mygit/refs/heads";
 constexpr const char* REFS_TAGS_DIR = ".mygit/refs/tags";
 
 constexpr const char* DEFAULT_HEAD_CONTENT = "ref: refs/heads/main\n";
+
+std::string zlib_decompress(const std::string& compressed);
+// std::string zlib_compress(const std::string& compressed);
 
 #endif  // !UTILS
