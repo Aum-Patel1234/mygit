@@ -1,29 +1,21 @@
 #include "../include/utils.h"
 
-std::string zlib_decompress(const std::string& compressed) {
-    if (compressed.empty())
-        return {};
+std::string decompressGitObject(const std::string& path) {
+    FILE* f = fopen(path.c_str(), "rb");
+    std::size_t rawSize = 0;
+    if (!f)
+        throw std::runtime_error("Failed to open file");
 
-    uLongf destLen = compressed.size() * 4 + 128;  // initial guess
-    std::vector<unsigned char> dest(destLen);
+    // decompress File
+    unsigned char* raw = decompressFile(f, &rawSize);
+    fclose(f);
+    if (!raw)
+        throw std::runtime_error("Failed to decompress Git object");
 
-    int ret = uncompress(dest.data(),
-                         &destLen,
-                         reinterpret_cast<const unsigned char*>(compressed.data()),
-                         static_cast<uLong>(compressed.size()));
+    std::string rawStr(reinterpret_cast<char*>(raw), rawSize);
 
-    while (ret == Z_BUF_ERROR) {
-        destLen *= 2;
-        dest.assign(destLen, 0);
-        ret = uncompress(dest.data(),
-                         &destLen,
-                         reinterpret_cast<const unsigned char*>(compressed.data()),
-                         static_cast<uLong>(compressed.size()));
-    }
+    // Free memory allocated by C
+    free(raw);
 
-    if (ret != Z_OK) {
-        throw std::runtime_error("zlib decompression failed (code " + std::to_string(ret) + ")");
-    }
-
-    return std::string(reinterpret_cast<char*>(dest.data()), static_cast<std::size_t>(destLen));
+    return rawStr;
 }

@@ -1,10 +1,3 @@
-#include <cassert>
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include "../include/init.h"
-#include "../include/sha256.h"
 #include "../test/test.h"
 
 namespace fs = std::filesystem;
@@ -49,4 +42,57 @@ void testBasicFunctions() {
     std::cout << "✅ git init test passed!\n";
 
     std::cout << "Every test executed successfully!\n";
+}
+
+void testCompressDecompress() {
+    std::cout << "\nTesting compression / decompression...\n";
+
+    const char* original = "Hello User! This is a test for zlib compression + decompression. 1234567890\n";
+
+    const char* inputFile = "tmp_test_input.txt";
+    const char* compressedFile = "tmp_test_compressed.bin";
+
+    // 1. Write original string to input file
+    {
+        FILE* f = fopen(inputFile, "wb");
+        assert(f && "Failed to create input file");
+        fwrite(original, 1, strlen(original), f);
+        fclose(f);
+    }
+
+    // 2. Compress → compressedFile
+    {
+        FILE* src = fopen(inputFile, "rb");
+        FILE* dest = fopen(compressedFile, "wb");
+        assert(src && dest);
+
+        compressFile(src, dest);
+
+        fclose(src);
+        fclose(dest);
+    }
+
+    // 3. Decompress
+    size_t outSize = 0;
+    unsigned char* outBuff = nullptr;
+
+    {
+        FILE* f = fopen(compressedFile, "rb");
+        assert(f && "Failed to read compressed file");
+
+        outBuff = decompressFile(f, &outSize);
+        fclose(f);
+    }
+
+    assert(outBuff && "decompressFile() returned NULL");
+
+    // Convert to std::string
+    std::string decompressed(reinterpret_cast<char*>(outBuff), outSize);
+
+    free(outBuff);
+
+    // 4. Compare
+    assert(decompressed == original);
+
+    std::cout << "✅ Compression/decompression test passed!\n";
 }

@@ -78,6 +78,7 @@ int main(int argc, char* argv[]) {
     // Test cases for functiosn
     std::cout << "\n\n";
     testBasicFunctions();
+    testCompressDecompress();
 
     return 0;
 }

@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <fstream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include "repo.h"
@@ -36,12 +37,12 @@ class GitObject {
       // NOTE:
       // No particular reason just my stupid fantacy to do something different.
      */
-    virtual std::string serialize() const = 0;
+    // virtual std::string serialize() const = 0;
 
     /*
      * here desserialize the previously serialized data
      */
-    virtual void deserialize(const std::string& data) = 0;
+    // virtual void deserialize(const std::string& data) = 0;
 
     /*
      * Read object sha from Git repository repo.  Return a
@@ -66,7 +67,7 @@ class GitObject {
     * IMPORTANT:
     * so internally what git does is that
     *
-    * tree 166\0 .....remaining
+    * tree 166\x00 .....remaining
     *
     * 0. uncompress data using zlib
     * 1. tree is the GitObject Type
@@ -76,6 +77,9 @@ class GitObject {
     *
      */
     static std::unique_ptr<GitObject> objectRead(const std::filesystem::path& repo, const std::string& sha);
+
+    static std::string objectWrite(const std::unique_ptr<GitObject> obj,
+                                   std::optional<std::filesystem::path> repo = std::nullopt);
 };
 
 // --------------------
@@ -86,44 +90,44 @@ class GitCommit : public GitObject {
    public:
     GitCommit() = default;
     explicit GitCommit(const std::string& raw) {
-        deserialize(raw);
+        // deserialize(raw);
     }
-
-    std::string serialize() const override;
-    void deserialize(const std::string& data) override;
+    //
+    //  std::string serialize() const override;
+    //  void deserialize(const std::string& data) override;
 };
 
 class GitTree : public GitObject {
    public:
     GitTree() = default;
     explicit GitTree(const std::string& raw) {
-        deserialize(raw);
+        // deserialize(raw);
     }
-
-    std::string serialize() const override;
-    void deserialize(const std::string& data) override;
+    //
+    //  std::string serialize() const override;
+    //  void deserialize(const std::string& data) override;
 };
 
 class GitTag : public GitObject {
    public:
     GitTag() = default;
     explicit GitTag(const std::string& raw) {
-        deserialize(raw);
+        // deserialize(raw);
     }
-
-    std::string serialize() const override;
-    void deserialize(const std::string& data) override;
+    //
+    //  std::string serialize() const override;
+    //  void deserialize(const std::string& data) override;
 };
 
 class GitBlob : public GitObject {
    public:
     GitBlob() = default;
     explicit GitBlob(const std::string& raw) {
-        deserialize(raw);
+        // deserialize(raw);
     }
-
-    std::string serialize() const override;
-    void deserialize(const std::string& data) override;
+    //
+    // std::string serialize() const override;
+    // void deserialize(const std::string& data) override;
 };
 
 #endif  // !GIT_OBJECT

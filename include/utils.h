@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "file_compress.h"
 
 constexpr const char* GIT_DIR = ".mygit";
 constexpr const char* HEAD_FILE = ".mygit/HEAD";
@@ -23,7 +24,6 @@ constexpr const char* REFS_TAGS_DIR = ".mygit/refs/tags";
 
 constexpr const char* DEFAULT_HEAD_CONTENT = "ref: refs/heads/main\n";
 
-std::string zlib_decompress(const std::string& compressed);
-// std::string zlib_compress(const std::string& compressed);
+std::string decompressGitObject(const std::string& path);
 
 #endif  // !UTILS

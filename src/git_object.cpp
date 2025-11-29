@@ -23,41 +23,30 @@ std::unique_ptr<GitObject> GitObject::objectRead(const std::filesystem::path& re
         throw std::runtime_error("File for path " + objectPath.string() + "not made.");
     }
 
-    std::ifstream file(path->string(), std::ios::binary);
-    if (!file)
-        throw std::runtime_error("Cannot open file: " + path->string());
-
-    file.seekg(0, std::ios::end);
-    std::size_t size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    std::string data(size, '\0');
-    file.read(data.data(), size);
-
     // Decompress git object
-    std::string raw = zlib_decompress(data);
+    std::string rawStr = decompressGitObject(path->string());
 
     // Parse: "<type> <size>\0<payload>"
-    std::size_t sp = raw.find(' ');
+    std::size_t sp = rawStr.find(' ');
     if (sp == std::string::npos)
         throw std::runtime_error("Malformed object header (no space)");
 
-    std::string fmt = raw.substr(0, sp);  // type: "commit", "tree", etc.
+    std::string fmt = rawStr.substr(0, sp);  // type: "commit", "tree", etc.
 
-    auto nz = raw.find('\0', sp + 1);
+    auto nz = rawStr.find('\x00', sp + 1);
     if (nz == std::string::npos)
         throw std::runtime_error("Malformed object header (no null terminator)");
 
-    std::string sizeStr = raw.substr(sp + 1, nz - (sp + 1));
+    std::string sizeStr = rawStr.substr(sp + 1, nz - (sp + 1));
     std::size_t declaredSize = std::stoul(sizeStr);
 
-    std::size_t actualSize = raw.size() - nz - 1;
+    std::size_t actualSize = rawStr.size() - nz - 1;
     if (declaredSize != actualSize) {
         throw std::runtime_error("Malformed object: bad length, declared=" + sizeStr +
                                  " actual=" + std::to_string(actualSize));
     }
 
-    std::string payload = raw.substr(nz + 1);
+    std::string payload = rawStr.substr(nz + 1);
 
     GitObjectType typ = gitObjectTypeFromString(fmt);
     switch (typ) {
@@ -73,3 +62,11 @@ std::unique_ptr<GitObject> GitObject::objectRead(const std::filesystem::path& re
             throw std::runtime_error("Unknown git object type: " + fmt);
     }
 }
+
+// std::string GitObject::objectWrite(const std::unique_ptr<GitObject> obj, std::optional<std::filesystem::path> repo) {
+//     std::string data = obj->serialize();
+//
+//     std::string result = data.substr(0, 3) + ' ' + std::string(data.size()).encode() + '\x00' + data;
+//
+//     // auto sha =
+// }
